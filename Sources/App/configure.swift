@@ -1,7 +1,6 @@
 import Fluent
 import FluentSQLiteDriver
 import Vapor
-import JWT
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -12,6 +11,8 @@ public func configure(_ app: Application) throws {
 
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateGarage())
+    app.migrations.add(CreateUser())
+    app.migrations.add(CreateUserToken())
 
     // register routes
     try routes(app)

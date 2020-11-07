@@ -14,8 +14,8 @@ struct GarageController: RouteCollection {
         let garages = routes.grouped("garages")
         garages.get(use: index)
         garages.post(use: create)
-        garages.group(":garageID") { todo in
-            todo.delete(use: delete)
+        garages.group(":garageID") { garage in
+            garage.delete(use: delete)
         }
     }
     

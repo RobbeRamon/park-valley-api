@@ -18,6 +18,6 @@ struct CreateGarage: Migration {
     }
     
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        return database.schema("todos").delete()
+        return database.schema("garages").delete()
     }
 }
