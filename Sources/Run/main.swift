@@ -8,4 +8,4 @@ defer { app.shutdown() }
 try configure(app)
 try app.autoMigrate().wait()
 try app.run()
-        
+    
