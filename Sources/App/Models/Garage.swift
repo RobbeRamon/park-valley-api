@@ -23,21 +23,26 @@ final class Garage : Model, Content {
     @Field(key: "longitude")
     var longitude: Double
     
+    @Field(key: "city")
+    var city: String
+    
     @Parent(key: "user_id")
     var user: User
     
     init() {}
     
-    init(id: UUID? = nil, name: String, latitude: Double, longitude: Double) {
+    init(id: UUID? = nil, name: String, latitude: Double, longitude: Double, city: String) {
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+        self.city = city
     }
     
     struct Create : Content {
         var name: String
         var latitude: Double
         var longitude: Double
+        var city: String
     }
 }

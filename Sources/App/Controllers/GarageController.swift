@@ -16,6 +16,7 @@ struct GarageController: RouteCollection {
         garages.post(use: create)
         garages.group(":garageID") { garage in
             garage.delete(use: delete)
+            garage.get(use: getById)
         }
     }
 
@@ -24,11 +25,16 @@ struct GarageController: RouteCollection {
         return Garage.query(on: req.db).all()
     }
     
+    func getById(req: Request) throws -> EventLoopFuture<Garage> {
+        return Garage.find(req.parameters.get("garageID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+    }
+    
     func create(req: Request) throws -> EventLoopFuture<Garage> {
         let user = try req.auth.require(User.self)
         let create = try req.content.decode(Garage.Create.self)
         
-        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude)
+        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude, city: create.city)
         
         garage.$user.id = user.id!
         
@@ -36,7 +42,7 @@ struct GarageController: RouteCollection {
     }
     
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return Todo.find(req.parameters.get("garageID"), on: req.db)
+        return Garage.find(req.parameters.get("garageID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)

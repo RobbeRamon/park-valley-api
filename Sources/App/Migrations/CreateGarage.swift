@@ -15,6 +15,7 @@ struct CreateGarage: Migration {
             .field("user_id", .string)
             .field("longitude", .double, .required)
             .field("latitude", .double, .required)
+            .field("city", .string, .required)
             .create()
     }
     
