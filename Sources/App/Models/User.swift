@@ -17,17 +17,21 @@ final class User: Model, Content {
     @Field(key: "username")
     var username: String
     
-//    @Field(key: "email")
-//    var email: String
+    @Field(key: "email")
+    var email: String
     
     @Field(key: "passwordHash")
     var passwordHash: String
     
+    @Children(for: \.$user)
+    var garages: [Garage]
+    
     init() { }
     
-    init(id: UUID? = nil, username: String, passwordHash: String) {
+    init(id: UUID? = nil, username: String, email: String, passwordHash: String) {
         self.id = id
         self.username = username
+        self.email = email
         self.passwordHash = passwordHash
     }
     
@@ -61,5 +65,11 @@ extension User {
             value: [UInt8].random(count: 16).base64,
             userID: self.requireID()
         )
+    }
+}
+
+extension User: SessionAuthenticatable {
+    var sessionID: String {
+        self.username
     }
 }

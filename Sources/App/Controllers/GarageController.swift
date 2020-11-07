@@ -18,13 +18,20 @@ struct GarageController: RouteCollection {
             garage.delete(use: delete)
         }
     }
+
     
     func index(req: Request) throws -> EventLoopFuture<[Garage]> {
         return Garage.query(on: req.db).all()
     }
     
     func create(req: Request) throws -> EventLoopFuture<Garage> {
-        let garage = try req.content.decode(Garage.self)
+        let user = try req.auth.require(User.self)
+        let create = try req.content.decode(Garage.Create.self)
+        
+        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude)
+        
+        garage.$user.id = user.id!
+        
         return garage.save(on: req.db).map { garage }
     }
     

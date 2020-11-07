@@ -33,6 +33,7 @@ struct UserController: RouteCollection {
         
         let user = try User(
             username: create.username,
+            email: create.email,
             passwordHash: Bcrypt.hash(create.password)
         )
         

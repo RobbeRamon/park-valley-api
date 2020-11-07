@@ -12,6 +12,7 @@ struct CreateGarage: Migration {
         return database.schema("garages")
             .id()
             .field("name", .string, .required)
+            .field("user_id", .string)
             .field("longitude", .double, .required)
             .field("latitude", .double, .required)
             .create()

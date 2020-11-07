@@ -23,6 +23,9 @@ final class Garage : Model, Content {
     @Field(key: "longitude")
     var longitude: Double
     
+    @Parent(key: "user_id")
+    var user: User
+    
     init() {}
     
     init(id: UUID? = nil, name: String, latitude: Double, longitude: Double) {
@@ -30,5 +33,11 @@ final class Garage : Model, Content {
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+    }
+    
+    struct Create : Content {
+        var name: String
+        var latitude: Double
+        var longitude: Double
     }
 }

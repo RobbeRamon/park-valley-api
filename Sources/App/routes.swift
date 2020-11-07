@@ -37,7 +37,7 @@ func routes(_ app: Application) throws {
     
 
     try app.register(collection: TodoController())
-    try app.register(collection: GarageController())
+    try tokenProtected.register(collection: GarageController())
     try app.register(collection: UserController())
 }
 
