@@ -11,7 +11,7 @@ func routes(_ app: Application) throws {
     // Authentication
     let passwordProtected = app.grouped(User.authenticator())
     
-    passwordProtected.post("login") { req -> EventLoopFuture<UserToken> in
+    passwordProtected.get("login") { req -> EventLoopFuture<UserToken> in
         let user = try req.auth.require(User.self)
         let token = try user.generateToken()
         return token.save(on: req.db)

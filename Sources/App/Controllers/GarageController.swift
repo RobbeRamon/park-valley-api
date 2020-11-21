@@ -29,6 +29,8 @@ struct GarageController: RouteCollection {
     
     func index(req: Request) throws -> EventLoopFuture<[Garage]> {
         
+        try req.auth.require(User.self)
+        
         if let city = (try? req.query.get(String.self, at: "city")) {
             print("test")
             return Garage.query(on: req.db).filter(\.$city == city ).all()
