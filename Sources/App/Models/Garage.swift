@@ -52,7 +52,28 @@ final class Garage : Model, Content {
     func getAvailableDaysWithinRange(startDate: Date, endDate: Date) -> [Date] {
         var dates = [Date]()
         
-        dates.append(Date())
+        var currentDate = startDate
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+        
+        
+        
+        while(currentDate < endDate) {
+            let filteredBookings: [Booking] = bookings.filter({(booking:Booking) in
+                return booking.date == currentDate
+            })
+            
+            print("currentDate \(dateFormatter.string(from: currentDate))")
+            print("endDate \(dateFormatter.string(from: endDate))")
+            
+            if filteredBookings.count > 0 {
+                dates.append(currentDate)
+            }
+            
+            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
         return dates
     }
 }

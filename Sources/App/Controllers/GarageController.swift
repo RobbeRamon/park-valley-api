@@ -73,16 +73,19 @@ struct GarageController: RouteCollection {
         let dateRange = try req.content.decode(DateRange.Create.self)
         
         
+        
 //        result.whenSuccess({(garage: Garage) -> Void in
 //            let dates = garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate)
 //        })
         
         let result2 = result.map({(garage: Garage) -> [String] in
             
+
+            
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
 
-            return garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.startDate)
+            return garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate)
                     .map{dateFormatter.string(from: $0)}
         })
         
