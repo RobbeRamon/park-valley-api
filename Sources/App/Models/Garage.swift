@@ -67,7 +67,7 @@ final class Garage : Model, Content {
             print("currentDate \(dateFormatter.string(from: currentDate))")
             print("endDate \(dateFormatter.string(from: endDate))")
             
-            if filteredBookings.count > 0 {
+            if filteredBookings.count < 1 {
                 dates.append(currentDate)
             }
             

@@ -8,8 +8,8 @@ struct CreateBooking: Migration {
         return database.schema("bookings")
             .id()
             .field("date", .date, .required)
-            .field("garage_id", .string)
-            .field("user_id", .double, .required)
+            .field("garage_id", .uuid, .references("garages", "id"))
+            .field("user_id", .uuid, .required, .references("users", "id"))
             .create()
     }
     
