@@ -64,6 +64,8 @@ final class Garage : Model, Content {
                 return booking.date == currentDate
             })
             
+            print(self.bookings)
+            
             print("currentDate \(dateFormatter.string(from: currentDate))")
             print("endDate \(dateFormatter.string(from: endDate))")
             
