@@ -29,6 +29,9 @@ final class Garage : Model, Content {
     @Parent(key: "user_id")
     var user: User
     
+    @Children(for: \.$garage)
+    var bookings: [Booking]
+    
     init() {}
     
     init(id: UUID? = nil, name: String, latitude: Double, longitude: Double, city: String) {
@@ -44,5 +47,12 @@ final class Garage : Model, Content {
         var latitude: Double
         var longitude: Double
         var city: String
+    }
+    
+    func getAvailableDaysWithinRange(startDate: Date, endDate: Date) -> [Date] {
+        var dates = [Date]()
+        
+        dates.append(Date())
+        return dates
     }
 }

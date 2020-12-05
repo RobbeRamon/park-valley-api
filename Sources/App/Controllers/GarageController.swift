@@ -19,11 +19,11 @@ struct GarageController: RouteCollection {
         garages.group(":garageID") { garage in
             garage.delete(use: delete)
             garage.get(use: getById)
+            
+            garage.group("availableDays") { day in
+                day.post(use: getAvailableDays)
+            }
         }
-        
-//        garages.group("city") { garage in
-//            garage.get(use: getByCity)
-//        }
     }
 
     
@@ -65,5 +65,42 @@ struct GarageController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
+    }
+    
+    func getAvailableDays(req: Request) throws -> EventLoopFuture<[String]> {
+        let result =  Garage.find(req.parameters.get("garageID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+        let dateRange = try req.content.decode(DateRange.Create.self)
+        
+        
+//        result.whenSuccess({(garage: Garage) -> Void in
+//            let dates = garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate)
+//        })
+        
+        let result2 = result.map({(garage: Garage) -> [String] in
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+
+            return garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.startDate)
+                    .map{dateFormatter.string(from: $0)}
+        })
+        
+        return result2
+        
+        
+//        return result.map({(garage:Garage) -> EventLoopFuture<[Date]> inE
+//            let dates = garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.startDate)
+//        })
+        
+       
+        
+
+    
+        
+
+        
+        
+        //return garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate);
     }
 }

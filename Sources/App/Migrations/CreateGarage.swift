@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Robbe on 07/11/2020.
-//
-
 import Fluent
 
 struct CreateGarage: Migration {

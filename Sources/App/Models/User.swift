@@ -26,6 +26,9 @@ final class User: Model, Content {
     @Children(for: \.$user)
     var garages: [Garage]
     
+    @Children(for: \.$user)
+    var bookings: [Booking]
+    
     init() { }
     
     init(id: UUID? = nil, username: String, email: String, passwordHash: String) {

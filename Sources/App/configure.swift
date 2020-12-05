@@ -21,6 +21,9 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateGarage())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateUserToken())
+    app.migrations.add(CreateBooking())
+    
+    try app.autoMigrate().wait()
 
     // register routes
     try routes(app)
