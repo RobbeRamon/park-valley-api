@@ -76,3 +76,10 @@ extension User: SessionAuthenticatable {
         self.username
     }
 }
+
+extension User {
+    func garageChildren() throws -> Children<Garage> {
+        return $garages
+        
+    }
+}

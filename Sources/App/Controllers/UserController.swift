@@ -16,6 +16,14 @@ struct UserController: RouteCollection {
         users.post(use: create)
         users.group(":userID") { user in
             user.delete(use: delete)
+            
+            user.group("bookings") { booking in
+                booking.get(use: getBookings)
+            }
+            
+            user.group("garages") { garage in
+                garage.get(use: getGarages)
+            }
         }
     }
     
@@ -45,6 +53,28 @@ struct UserController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
+    }
+    
+    func getBookings(req: Request) throws -> EventLoopFuture<[Booking]> {
+        let user = try req.auth.require(User.self)
+        
+        let result = User.query(on: req.db).filter(\.$username == user.email).with(\.$bookings).with(\.$garages).first()
+        return result.map({(user: User?) -> [Booking] in
+            
+            if let user = user {
+                return user.bookings
+            }
+            
+            return []
+            
+        })
+    }
+    
+    func getGarages(req: Request) throws -> EventLoopFuture<[Garage]> {
+        
+        
+        
+        
     }
 }
 

@@ -38,6 +38,6 @@ func routes(_ app: Application) throws {
 
     try app.register(collection: TodoController())
     try tokenProtected.register(collection: GarageController())
-    try app.register(collection: UserController())
+    try tokenProtected.register(collection: UserController())
 }
 
