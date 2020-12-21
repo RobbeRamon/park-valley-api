@@ -11,8 +11,6 @@ import Vapor
 
 struct GarageController: RouteCollection {
     
-    var garages: Garages = Garages()
-    
     
     func boot(routes: RoutesBuilder) throws {
         let garages = routes.grouped("garages")
@@ -53,7 +51,7 @@ struct GarageController: RouteCollection {
         let user = try req.auth.require(User.self)
         
         if let city = (try? req.query.get(String.self, at: "city")) {
-            return garages.getGaragesByCity(user: user, city: city)
+            return Garages.getGaragesByCity(user: user, city: city)
             //return Garage.query(on: req.db).filter(\.$city == city ).all()
         }
         
@@ -68,7 +66,7 @@ struct GarageController: RouteCollection {
         let garageId = req.parameters.get("garageID")
     
         
-        let garage = garages.getGarageById(user: user, id: UUID(uuidString: garageId!)!)
+        let garage = Garages.getGarageById(user: user, id: UUID(uuidString: garageId!)!)
         
         
         return garage!
@@ -101,11 +99,11 @@ struct GarageController: RouteCollection {
         let user = try req.auth.require(User.self)
         let create = try req.content.decode(BookingDTO.Create.self)
         
-        let garage = garages.getGarageByName(user: user, name: create.name)
+        let garage = Garages.getGarageByName(user: user, name: create.name)
         
         var booking = Booking(date: create.date)
         
-        booking = garages.addBookingToGarage(user: user, garage: garage!, booking: booking)
+        booking = Garages.addBookingToGarage(user: user, garage: garage!, booking: booking)
         return booking
     }
     
@@ -118,7 +116,7 @@ struct GarageController: RouteCollection {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         
-        let garage = garages.getGarageByName(user: user, name: dateRange.name)
+        let garage = Garages.getGarageByName(user: user, name: dateRange.name)
         return (garage?.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate).map{
             dateFormatter.string(from: $0)
         }) ?? []
