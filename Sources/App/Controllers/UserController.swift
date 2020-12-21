@@ -23,6 +23,11 @@ struct UserController: RouteCollection {
             
             user.group("garages") { garage in
                 garage.get(use: getGarages)
+                
+                
+                garage.group("favourite") { favor in
+                    favor.get(use: getFavouriteGarages)
+                }
             }
         }
     }
@@ -72,13 +77,33 @@ struct UserController: RouteCollection {
 
     }
     
-    func getGarages(req: Request) throws -> [Garage] {
+    func getGarages(req: Request) throws -> [GarageDTO] {
         
         
         let user = try req.auth.require(User.self)
         
-        return Garages.getGaragesByUser(user: user)
+        return Garages.getGaragesByUser(user: user).map({
+            transformGarageToGarageDTO(garage: $0, user: user)
+        })
         
+    }
+    
+    func getFavouriteGarages(req: Request) throws -> [GarageDTO] {
+        let user = try req.auth.require(User.self)
+        
+        return Garages.favoredGaragesByUser(user: user).map({
+            transformGarageToGarageDTO(garage: $0, user: user)
+        })
+    }
+    
+    private func transformGarageToGarageDTO(garage: Garage, user: User) -> GarageDTO {
+        var favorite = false
+        
+        if garage.favoredBy.first(where: {$0.id == user.id}) != nil {
+            favorite = true
+        }
+        
+        return GarageDTO(id: garage.id!, name: garage.name, latitude: garage.latitude, longitude: garage.longitude, city: garage.city, user: garage.user, bookings: garage.bookings, favorite: favorite)
     }
 }
 
