@@ -91,7 +91,7 @@ struct UserController: RouteCollection {
             favorite = true
         }
         
-        return GarageDTO(id: garage.id!, name: garage.name, latitude: garage.latitude, longitude: garage.longitude, city: garage.city, user: garage.user, bookings: garage.bookings, favorite: favorite)
+        return GarageDTO(id: garage.id!, name: garage.name, description: garage.description, latitude: garage.latitude, longitude: garage.longitude, city: garage.city, user: garage.user, bookings: garage.bookings, favorite: favorite)
     }
 }
 

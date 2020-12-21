@@ -17,8 +17,9 @@ final class GarageDTO : Content {
     var user: User
     var bookings: [Booking]
     var favorite: Bool
+    var description: String
     
-    init(id: UUID, name: String, latitude: Double, longitude: Double, city: String, user: User, bookings: [Booking], favorite: Bool) {
+    init(id: UUID, name: String, description: String, latitude: Double, longitude: Double, city: String, user: User, bookings: [Booking], favorite: Bool) {
         self.id = id
         self.name = name
         self.latitude = latitude
@@ -27,6 +28,7 @@ final class GarageDTO : Content {
         self.user = user
         self.bookings = bookings
         self.favorite = favorite
+        self.description = description
     }
     
     struct Create : Content {

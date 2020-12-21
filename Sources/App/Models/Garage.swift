@@ -15,6 +15,8 @@ final class Garage :  Content, Equatable {
     var id: UUID?
 
     var name: String
+    
+    var description: String
 
     var latitude: Double
 
@@ -28,13 +30,14 @@ final class Garage :  Content, Equatable {
     
     var favoredBy: [User]
     
-    init(id: UUID? = nil, name: String, latitude: Double, longitude: Double, city: String, user: User) {
+    init(id: UUID? = nil, name: String, description: String, latitude: Double, longitude: Double, city: String, user: User) {
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
         self.city = city
         self.user = user
+        self.description = description
         bookings = []
         favoredBy = []
     }
@@ -53,10 +56,6 @@ final class Garage :  Content, Equatable {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
-        
-        
-        
-        
         
         while(currentDate <= endDate) {
             let filteredBookings: [Booking] = bookings.filter({(booking:Booking) in
