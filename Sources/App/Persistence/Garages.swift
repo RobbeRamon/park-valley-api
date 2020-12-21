@@ -143,6 +143,23 @@ class Garages {
         return true
     }
     
+    static func getBookingsFromUser(user: User) -> [BookingDTO] {
+        //let allBookings = garages.flatMap({$0.bookings})
+        //var bookings = allBookings.filter({$0.user.id == user.id})
+        
+        var bookings : [BookingDTO] = []
+        
+        for garage in garages {
+            for booking in garage.bookings {
+                if booking.user.id == user.id {
+                    bookings.append(BookingDTO(name: garage.name, date: booking.date))
+                }
+            }
+        }
+        
+        return bookings
+    }
+    
 
     
     

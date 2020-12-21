@@ -5,15 +5,13 @@ final class Booking : Content {
     static let schema = "bookings"
     var id: UUID?
     var date: Date
-    //var garage: Garage?
-    //var user: User
+    var user: User
     
     
-    init(id: UUID? = nil, date: Date) {
+    init(id: UUID? = nil, date: Date, user: User) {
         self.id = id
         self.date = date
-        //self.garage = garage
-        //self.user = user
+        self.user = user
     }
     
     struct Create : Content {

@@ -114,10 +114,11 @@ struct GarageController: RouteCollection {
         
         let garage = Garages.getGarageByName(user: user, name: create.name)
         
-        var booking = Booking(date: create.date)
+        var booking = Booking(date: create.date, user: user)
         
         booking = Garages.addBookingToGarage(user: user, garage: garage!, booking: booking)
         return booking
+
     }
     
     

@@ -60,21 +60,9 @@ struct UserController: RouteCollection {
             .transform(to: .ok)
     }
     
-    func getBookings(req: Request) throws -> [Booking] {
-//        let user = try req.auth.require(User.self)
-//
-//        let result = User.query(on: req.db).filter(\.$username == user.email).with(\.$bookings).with(\.$garages).first()
-//        return result.map({(user: User?) -> [Booking] in
-//
-//            if let user = user {
-//                return user.bookings
-//            }
-//
-//            return []
-//
-//        })
-        return []
-
+    func getBookings(req: Request) throws -> [BookingDTO] {
+        let user = try req.auth.require(User.self)
+        return Garages.getBookingsFromUser(user: user)
     }
     
     func getGarages(req: Request) throws -> [GarageDTO] {
