@@ -96,6 +96,55 @@ class Garages {
         }
     }
     
+    static func favoredGaragesByUser(user: User) -> [Garage] {
+        
+        return garages.filter({ (garage: Garage) -> Bool in
+            garage.favoredBy.contains { $0.id == user.id }
+        })
+        
+    }
+    
+    static func favorGarage(user: User, garageId: UUID) -> Bool {
+        
+        let garage = garages.first(where: {
+            $0.id == garageId
+        })
+        
+        if let garage = garage {
+            
+            if garage.favoredBy.first(where: {$0.id == user.id}) == nil {
+                garage.favoredBy.append(user)
+            }
+            
+        } else {
+            return false
+        }
+        
+        return true
+        
+    }
+    
+    static func defavorGarage(user: User, garageId: UUID) -> Bool {
+        
+        let garage = garages.first(where: {
+            $0.id == garageId
+        })
+        
+        if let garage = garage {
+            
+            if let index = garage.favoredBy.firstIndex(of: user) {
+                garage.favoredBy.remove(at: index)
+            }
+            
+        } else {
+            return false
+        }
+        
+        return true
+    }
+    
+
+    
     
     
 }

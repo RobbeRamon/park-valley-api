@@ -29,6 +29,14 @@ struct GarageController: RouteCollection {
             garage.group("addBooking") { booking in
                 booking.post(use: addBooking)
             }
+            
+            garage.group("favor") { garage in
+                garage.get(use: favorGarage)
+            }
+            
+            garage.group("defavor") { garage in
+                garage.get(use: defavorGarage)
+            }
         }
     }
 
@@ -46,12 +54,14 @@ struct GarageController: RouteCollection {
         return Garage.query(on: req.db).all()
     }*/
     
-    func index(req: Request) throws -> [Garage] {
+    func index(req: Request) throws -> [GarageDTO] {
         
         let user = try req.auth.require(User.self)
         
         if let city = (try? req.query.get(String.self, at: "city")) {
-            return Garages.getGaragesByCity(user: user, city: city)
+            return Garages.getGaragesByCity(user: user, city: city).map({
+                transformGarageToGarageDTO(garage: $0, user: user)
+            })
             //return Garage.query(on: req.db).filter(\.$city == city ).all()
         }
         
@@ -60,7 +70,7 @@ struct GarageController: RouteCollection {
         return []
     }
     
-    func getById(req: Request) throws -> Garage {
+    func getById(req: Request) throws -> GarageDTO {
         
         let user = try req.auth.require(User.self)
         let garageId = req.parameters.get("garageID")
@@ -69,7 +79,7 @@ struct GarageController: RouteCollection {
         let garage = Garages.getGarageById(user: user, id: UUID(uuidString: garageId!)!)
         
         
-        return garage!
+        return transformGarageToGarageDTO(garage: garage!, user: user)
     }
     
     func create(req: Request) throws -> [Garage] {
@@ -86,11 +96,6 @@ struct GarageController: RouteCollection {
     }
     
     func delete(req: Request) throws -> HTTPStatus {
-//        return Garage.find(req.parameters.get("garageID"), on: req.db)
-//            .unwrap(or: Abort(.notFound))
-//            .flatMap { $0.delete(on: req.db) }
-//            .transform(to: .ok)
-        
         let garageId = req.parameters.get("garageID")
         
         let result = Garages.deleteGarage(id: UUID(uuidString: garageId!)!)
@@ -129,5 +134,45 @@ struct GarageController: RouteCollection {
             dateFormatter.string(from: $0)
         }) ?? []
         
+    }
+    
+    func favorGarage(req: Request) throws -> HTTPStatus {
+        
+        let user = try req.auth.require(User.self)
+        let garageId = req.parameters.get("garageID")
+        
+        let result = Garages.favorGarage(user: user, garageId: UUID(uuidString: garageId!)!)
+        
+        if !result {
+            return HTTPStatus.badRequest
+        }
+        
+        return HTTPStatus.ok
+    }
+    
+    func defavorGarage(req: Request) throws -> HTTPStatus {
+        
+        let user = try req.auth.require(User.self)
+        let garageId = req.parameters.get("garageID")
+        
+        let result = Garages.defavorGarage(user: user, garageId: UUID(uuidString: garageId!)!)
+        
+        
+        if !result {
+            return HTTPStatus.badRequest
+        }
+        
+        return HTTPStatus.ok
+        
+    }
+    
+    private func transformGarageToGarageDTO(garage: Garage, user: User) -> GarageDTO {
+        var favorite = false
+        
+        if garage.favoredBy.first(where: {$0.id == user.id}) != nil {
+            favorite = true
+        }
+        
+        return GarageDTO(id: garage.id!, name: garage.name, latitude: garage.latitude, longitude: garage.longitude, city: garage.city, user: garage.user, bookings: garage.bookings, favorite: favorite)
     }
 }

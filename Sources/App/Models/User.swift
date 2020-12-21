@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-final class User: Model, Content {
+final class User: Model, Content, Equatable {
     static let schema = "users"
     
     @ID(key: .id)
@@ -51,6 +51,10 @@ final class User: Model, Content {
             validations.add("password", as: String.self, is: .count(8...))
         }
         
+    }
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

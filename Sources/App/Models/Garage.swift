@@ -26,6 +26,8 @@ final class Garage :  Content, Equatable {
     
     var bookings: [Booking]
     
+    var favoredBy: [User]
+    
     init(id: UUID? = nil, name: String, latitude: Double, longitude: Double, city: String, user: User) {
         self.id = id
         self.name = name
@@ -34,6 +36,7 @@ final class Garage :  Content, Equatable {
         self.city = city
         self.user = user
         bookings = []
+        favoredBy = []
     }
     
     struct Create : Content {
