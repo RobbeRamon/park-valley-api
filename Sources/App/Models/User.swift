@@ -23,11 +23,12 @@ final class User: Model, Content {
     @Field(key: "passwordHash")
     var passwordHash: String
     
-    @Children(for: \.$user)
-    var garages: [Garage]
+    var garages: [Garage] = []
     
-    @Children(for: \.$user)
-    var bookings: [Booking]
+
+    var bookings: [Booking] = []
+    
+    var savedGarages: [Garage] = []
     
     init() { }
     
@@ -74,12 +75,5 @@ extension User {
 extension User: SessionAuthenticatable {
     var sessionID: String {
         self.username
-    }
-}
-
-extension User {
-    func garageChildren() throws -> Children<Garage> {
-        return $garages
-        
     }
 }

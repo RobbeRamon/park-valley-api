@@ -10,6 +10,10 @@ import Vapor
 
 
 struct GarageController: RouteCollection {
+    
+    var garages: Garages = Garages()
+    
+    
     func boot(routes: RoutesBuilder) throws {
         let garages = routes.grouped("garages")
         
@@ -30,7 +34,7 @@ struct GarageController: RouteCollection {
         }
     }
 
-    
+    /*
     func index(req: Request) throws -> EventLoopFuture<[Garage]> {
         
         try req.auth.require(User.self)
@@ -42,82 +46,82 @@ struct GarageController: RouteCollection {
         }
         
         return Garage.query(on: req.db).all()
-    }
+    }*/
     
-    func getById(req: Request) throws -> EventLoopFuture<Garage> {
-        return Garage.find(req.parameters.get("garageID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-    }
-
-//    func getByCity(req: Request) throws -> EventLoopFuture<[Garage]> {
-//        return Garage.query(on: req.db).filter(\.$city == req.parameters.get("city")! ).all()
-//    }
-    
-    func create(req: Request) throws -> EventLoopFuture<Garage> {
+    func index(req: Request) throws -> [Garage] {
+        
         let user = try req.auth.require(User.self)
-        let create = try req.content.decode(Garage.Create.self)
         
-        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude, city: create.city)
+        if let city = (try? req.query.get(String.self, at: "city")) {
+            return garages.getGaragesByCity(user: user, city: city)
+            //return Garage.query(on: req.db).filter(\.$city == city ).all()
+        }
         
-        garage.$user.id = user.id!
+        //return Garage.query(on: req.db).all()
         
-        return garage.save(on: req.db).map { garage }
+        return []
     }
     
-    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return Garage.find(req.parameters.get("garageID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { $0.delete(on: req.db) }
-            .transform(to: .ok)
-    }
-    
-    func addBooking(req: Request) throws -> EventLoopFuture<Booking> {
+    func getById(req: Request) throws -> Garage {
+        
         let user = try req.auth.require(User.self)
-        let create = try req.content.decode(Booking.Create.self)
+        let garageId = req.parameters.get("garageID")
+    
         
-        let booking = Booking(date: create.date)
-        booking.$user.id = user.id!
+        let garage = garages.getGarageById(user: user, id: UUID(uuidString: garageId!)!)
         
         
-        let result = Garage.find(req.parameters.get("garageID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-        _ = result.map({(garage: Garage) -> Bool in
-      
-            booking.$garage.id = garage.id!
-            
-            return true
-            
-        })
-        
-        return booking.save(on: req.db).map { booking }
+        return garage!
     }
     
-    
-    func getAvailableDays(req: Request) throws -> EventLoopFuture<[String]> {
+    func create(req: Request) throws -> [Garage] {
+//        let user = try req.auth.require(User.self)
+//        let create = try req.content.decode(Garage.Create.self)
+//
+//        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude, city: create.city)
+//
+//        garage.$user.id = user.id!
+//
+//        return garage.save(on: req.db).map { garage }
         
-//        let result5 =  Garage.find(req.parameters.get("garageID"), on: req.db)
+        return []
+    }
+    
+    func delete(req: Request) throws -> HTTPStatus {
+//        return Garage.find(req.parameters.get("garageID"), on: req.db)
 //            .unwrap(or: Abort(.notFound))
+//            .flatMap { $0.delete(on: req.db) }
+//            .transform(to: .ok)
+        
+        return HTTPStatus.ok
+    }
+    
+    func addBooking(req: Request) throws -> Booking {
+        
+        let user = try req.auth.require(User.self)
+        let create = try req.content.decode(BookingDTO.Create.self)
+        
+        let garage = garages.getGarageByName(user: user, name: create.name)
+        
+        var booking = Booking(date: create.date)
+        
+        booking = garages.addBookingToGarage(user: user, garage: garage!, booking: booking)
+        return booking
+    }
+    
+    
+    func getAvailableDays(req: Request) throws -> [String] {
+        
+        let user = try req.auth.require(User.self)
         let dateRange = try req.content.decode(DateRange.Create.self)
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         
-        let result = Garage.query(on:req.db).filter(\.$name == dateRange.name).with(\.$bookings).first()
-        let result2 = result.map({(garage: Garage?) -> [String] in
-            
-
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
-
-            if let garage = garage {
-                return garage.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate)
-                        .map{dateFormatter.string(from: $0)}
-            }
-            
-            return []
-            
-
-        })
+        let garage = garages.getGarageByName(user: user, name: dateRange.name)
+        return (garage?.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate).map{
+            dateFormatter.string(from: $0)
+        }) ?? []
         
-        return result2
     }
 }

@@ -55,25 +55,27 @@ struct UserController: RouteCollection {
             .transform(to: .ok)
     }
     
-    func getBookings(req: Request) throws -> EventLoopFuture<[Booking]> {
-        let user = try req.auth.require(User.self)
+    func getBookings(req: Request) throws -> [Booking] {
+//        let user = try req.auth.require(User.self)
+//
+//        let result = User.query(on: req.db).filter(\.$username == user.email).with(\.$bookings).with(\.$garages).first()
+//        return result.map({(user: User?) -> [Booking] in
+//
+//            if let user = user {
+//                return user.bookings
+//            }
+//
+//            return []
+//
+//        })
         
-        let result = User.query(on: req.db).filter(\.$username == user.email).with(\.$bookings).with(\.$garages).first()
-        return result.map({(user: User?) -> [Booking] in
-            
-            if let user = user {
-                return user.bookings
-            }
-            
-            return []
-            
-        })
+        return []
     }
     
-    func getGarages(req: Request) throws -> EventLoopFuture<[Garage]> {
+    func getGarages(req: Request) throws -> [Garage] {
         
         
-        
+        return []
         
     }
 }
