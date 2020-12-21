@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-final class Garage :  Content {
+final class Garage :  Content, Equatable {
     static let schema = "garages"
     
 
@@ -73,5 +73,9 @@ final class Garage :  Content {
         }
         
         return dates
+    }
+    
+    static func == (lhs: Garage, rhs: Garage) -> Bool {
+        return lhs.id == rhs.id
     }
 }

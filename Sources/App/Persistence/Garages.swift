@@ -83,6 +83,19 @@ class Garages {
         return booking
     }
     
+    static func deleteGarage(id: UUID) -> Bool {
+        let garage = garages.first(where: {
+            $0.id == id
+        })
+        
+        if let garage = garage, let index = garages.firstIndex(of: garage) {
+            garages.remove(at: index)
+            return true
+        } else {
+            return false
+        }
+    }
+    
     
     
 }

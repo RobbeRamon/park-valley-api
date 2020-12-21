@@ -68,14 +68,16 @@ struct UserController: RouteCollection {
 //            return []
 //
 //        })
-        
         return []
+
     }
     
     func getGarages(req: Request) throws -> [Garage] {
         
         
-        return []
+        let user = try req.auth.require(User.self)
+        
+        return Garages.getGaragesByUser(user: user)
         
     }
 }

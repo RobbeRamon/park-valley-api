@@ -91,6 +91,14 @@ struct GarageController: RouteCollection {
 //            .flatMap { $0.delete(on: req.db) }
 //            .transform(to: .ok)
         
+        let garageId = req.parameters.get("garageID")
+        
+        let result = Garages.deleteGarage(id: UUID(uuidString: garageId!)!)
+        
+        if !result {
+            return HTTPStatus.badRequest
+        }
+        
         return HTTPStatus.ok
     }
     
