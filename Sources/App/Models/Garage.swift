@@ -53,12 +53,14 @@ final class Garage :  Content {
         
         
         
-        while(currentDate < endDate) {
+        
+        
+        while(currentDate <= endDate) {
             let filteredBookings: [Booking] = bookings.filter({(booking:Booking) in
-                return booking.date == currentDate
+                let order = Calendar.current.compare(currentDate, to: booking.date, toGranularity: .day)
+                //return booking.date == currentDate
+                return order == .orderedSame
             })
-            
-            print(self.bookings)
             
             print("currentDate \(dateFormatter.string(from: currentDate))")
             print("endDate \(dateFormatter.string(from: endDate))")
