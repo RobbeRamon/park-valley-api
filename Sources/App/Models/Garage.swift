@@ -47,6 +47,7 @@ final class Garage :  Content, Equatable {
         var latitude: Double
         var longitude: Double
         var city: String
+        var description: String
     }
     
     func getAvailableDaysWithinRange(startDate: Date, endDate: Date) -> [Date] {

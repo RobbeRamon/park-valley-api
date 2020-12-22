@@ -51,7 +51,7 @@ class Garages {
         })
     }
     
-    static func addGarage(user: User, garage: Garage) -> Void {
+    static func addGarage(user: User, garage: Garage) -> Garage {
         if isInitialized == false {
             initializeData(user: user)
             isInitialized = true
@@ -59,6 +59,8 @@ class Garages {
         
         garage.id = UUID()
         garages.append(garage)
+        
+        return garage
     }
     
     static func getGaragesByUser(user: User) -> [Garage] {

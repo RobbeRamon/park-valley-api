@@ -82,7 +82,7 @@ struct GarageController: RouteCollection {
         return transformGarageToGarageDTO(garage: garage!, user: user)
     }
     
-    func create(req: Request) throws -> [Garage] {
+    func create(req: Request) throws -> Garage {
 //        let user = try req.auth.require(User.self)
 //        let create = try req.content.decode(Garage.Create.self)
 //
@@ -92,7 +92,15 @@ struct GarageController: RouteCollection {
 //
 //        return garage.save(on: req.db).map { garage }
         
-        return []
+        
+        let user = try req.auth.require(User.self)
+        
+        let create = try req.content.decode(Garage.Create.self)
+        let garage = Garage (id: UUID(), name: create.name, description: create.description, latitude: create.latitude, longitude: create.longitude, city: create.city, user: user)
+        
+        let createdGarage = Garages.addGarage(user: user, garage: garage)
+        
+        return createdGarage
     }
     
     func delete(req: Request) throws -> HTTPStatus {
