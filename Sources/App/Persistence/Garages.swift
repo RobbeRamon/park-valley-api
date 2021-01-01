@@ -162,6 +162,12 @@ class Garages {
         return bookings
     }
     
+    static func reset() -> Bool {
+        garages = []
+        isInitialized = false
+        return true
+    }
+    
 
     
     

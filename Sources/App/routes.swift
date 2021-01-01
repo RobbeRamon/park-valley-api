@@ -30,6 +30,11 @@ func routes(_ app: Application) throws {
     app.get { req in
         return "It works!"
     }
+    
+    app.get("reset") { req -> StatusDTO in
+        let status = Garages.reset()
+        return StatusDTO(success: status)
+    }
 
     app.get("hello") { req -> String in
         return "Hello, world!"
