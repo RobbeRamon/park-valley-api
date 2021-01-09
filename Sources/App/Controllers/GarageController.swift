@@ -39,20 +39,6 @@ struct GarageController: RouteCollection {
             }
         }
     }
-
-    /*
-    func index(req: Request) throws -> EventLoopFuture<[Garage]> {
-        
-        try req.auth.require(User.self)
-        
-        if let city = (try? req.query.get(String.self, at: "city")) {
-            print("test")
-            return Garage.query(on: req.db).filter(\.$city == city ).all()
-
-        }
-        
-        return Garage.query(on: req.db).all()
-    }*/
     
     func index(req: Request) throws -> [GarageDTO] {
         
@@ -62,10 +48,8 @@ struct GarageController: RouteCollection {
             return Garages.getGaragesByCity(user: user, city: city).map({
                 transformGarageToGarageDTO(garage: $0, user: user)
             })
-            //return Garage.query(on: req.db).filter(\.$city == city ).all()
         }
         
-        //return Garage.query(on: req.db).all()
         
         return []
     }
@@ -76,27 +60,26 @@ struct GarageController: RouteCollection {
         let garageId = req.parameters.get("garageID")
     
         
-        let garage = Garages.getGarageById(user: user, id: UUID(uuidString: garageId!)!)
+        let garage = Garages.getGarageById(user: user,
+                                           id: UUID(uuidString: garageId!)!)
         
         
         return transformGarageToGarageDTO(garage: garage!, user: user)
     }
     
     func create(req: Request) throws -> Garage {
-//        let user = try req.auth.require(User.self)
-//        let create = try req.content.decode(Garage.Create.self)
-//
-//        let garage = Garage (name: create.name, latitude: create.latitude, longitude: create.longitude, city: create.city)
-//
-//        garage.$user.id = user.id!
-//
-//        return garage.save(on: req.db).map { garage }
         
         
         let user = try req.auth.require(User.self)
         
         let create = try req.content.decode(Garage.Create.self)
-        let garage = Garage (id: UUID(), name: create.name, description: create.description, latitude: create.latitude, longitude: create.longitude, city: create.city, user: user)
+        let garage = Garage (id: UUID(),
+                             name: create.name,
+                             description: create.description,
+                             latitude: create.latitude,
+                             longitude: create.longitude,
+                             city: create.city,
+                             user: user)
         
         let createdGarage = Garages.addGarage(user: user, garage: garage)
         
@@ -139,7 +122,7 @@ struct GarageController: RouteCollection {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         
         let garage = Garages.getGarageByName(user: user, name: dateRange.name)
-        return (garage?.getAvailableDaysWithinRange(startDate: dateRange.startDate, endDate: dateRange.endDate).map{
+        return (garage?.getAvailableDaysWithinRange(from: dateRange.startDate, to: dateRange.endDate).map{
             dateFormatter.string(from: $0)
         }) ?? []
         
@@ -150,7 +133,8 @@ struct GarageController: RouteCollection {
         let user = try req.auth.require(User.self)
         let garageId = req.parameters.get("garageID")
         
-        let result = Garages.favorGarage(user: user, garageId: UUID(uuidString: garageId!)!)
+        let result = Garages.favorGarage(user: user,
+                                         garageId: UUID(uuidString: garageId!)!)
         
         if !result {
             return HTTPStatus.badRequest
@@ -164,7 +148,8 @@ struct GarageController: RouteCollection {
         let user = try req.auth.require(User.self)
         let garageId = req.parameters.get("garageID")
         
-        let result = Garages.defavorGarage(user: user, garageId: UUID(uuidString: garageId!)!)
+        let result = Garages.defavorGarage(user: user,
+                                           garageId: UUID(uuidString: garageId!)!)
         
         
         if !result {
@@ -182,6 +167,14 @@ struct GarageController: RouteCollection {
             favorite = true
         }
         
-        return GarageDTO(id: garage.id!, name: garage.name, description: garage.description, latitude: garage.latitude, longitude: garage.longitude, city: garage.city, user: garage.user, bookings: garage.bookings, favorite: favorite)
+        return GarageDTO(id: garage.id!,
+                         name: garage.name,
+                         description: garage.description,
+                         latitude: garage.latitude,
+                         longitude: garage.longitude,
+                         city: garage.city,
+                         user: garage.user,
+                         bookings: garage.bookings,
+                         favorite: favorite)
     }
 }

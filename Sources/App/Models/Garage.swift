@@ -50,7 +50,7 @@ final class Garage :  Content, Equatable {
         var description: String
     }
     
-    func getAvailableDaysWithinRange(startDate: Date, endDate: Date) -> [Date] {
+    func getAvailableDaysWithinRange(from startDate: Date, to endDate: Date) -> [Date] {
         var dates = [Date]()
         
         var currentDate = startDate
