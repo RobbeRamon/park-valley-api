@@ -16,4 +16,4 @@ Install de brew package Vapor indien dit nog niet gebeurt is.
 ```
 brew install vapor
 ```
-Hierna heb je normaalgezien de mogelijkheid om de Vapor server te starten door "build & run" in xcode.
+Hierna heb je de mogelijkheid om de Vapor server te starten door "build & run" in xcode.
