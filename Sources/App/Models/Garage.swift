@@ -59,7 +59,8 @@ final class Garage :  Content, Equatable {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         
         while(currentDate <= endDate) {
-            let filteredBookings: [Booking] = bookings.filter({(booking:Booking) in
+            let filteredBookings: [Booking] = bookings.filter({(booking:Booking)
+                in
                 let order = Calendar.current.compare(currentDate, to: booking.date, toGranularity: .day)
                 //return booking.date == currentDate
                 return order == .orderedSame

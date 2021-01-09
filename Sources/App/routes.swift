@@ -3,11 +3,6 @@ import Vapor
 
 func routes(_ app: Application) throws {
     
-//    let protection = app.grouped(UserAuthenticator())
-//    protected.get("me") { req -> String in
-//        try req.auth.require(User.self).username
-//    }
-    
     // Authentication
     let passwordProtected = app.grouped(User.authenticator())
     
@@ -23,14 +18,11 @@ func routes(_ app: Application) throws {
         try req.auth.require(User.self)
     }
     
-    
-    
-    //
-    
     app.get { req in
         return "It works!"
     }
     
+    // endpoint only for prototype
     app.get("reset") { req -> StatusDTO in
         let status = Garages.reset()
         return StatusDTO(success: status)
@@ -41,7 +33,6 @@ func routes(_ app: Application) throws {
     }
     
 
-    try app.register(collection: TodoController())
     try tokenProtected.register(collection: GarageController())
     try tokenProtected.register(collection: UserController())
 }
