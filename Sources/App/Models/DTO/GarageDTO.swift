@@ -19,7 +19,7 @@ final class GarageDTO : Content {
     var favorite: Bool
     var description: String
     
-    init(id: UUID, name: String, description: String, latitude: Double, longitude: Double, city: String, user: User, bookings: [Booking], favorite: Bool) {
+    init(id: UUID,name: String, description: String, latitude: Double, longitude: Double, city: String, user: User, bookings: [Booking], favorite: Bool) {
         self.id = id
         self.name = name
         self.latitude = latitude
