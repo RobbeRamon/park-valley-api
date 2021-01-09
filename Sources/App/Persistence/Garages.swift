@@ -13,7 +13,13 @@ class Garages {
     
     
     static func initializeData(user: User) -> Void {
-        let garage: Garage = Garage(id: UUID(), name: "Garage near city center", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", latitude: 40.715756, longitude: -74.045202, city: "New York", user: user)
+        let garage: Garage = Garage(id: UUID(),
+                                    name: "Garage near city center",
+                                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                                    latitude: 40.715756,
+                                    longitude: -74.045202,
+                                    city: "New York",
+                                    user: user)
         
         garages.append(garage)
     }
@@ -146,8 +152,6 @@ class Garages {
     }
     
     static func getBookingsFromUser(user: User) -> [BookingDTO] {
-        //let allBookings = garages.flatMap({$0.bookings})
-        //var bookings = allBookings.filter({$0.user.id == user.id})
         
         var bookings : [BookingDTO] = []
         
@@ -167,9 +171,4 @@ class Garages {
         isInitialized = false
         return true
     }
-    
-
-    
-    
-    
 }
